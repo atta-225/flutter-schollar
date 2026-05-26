@@ -1,14 +1,29 @@
+// =============================================================
+// PENJELASAN FILE: lib/pages/detail_beasiswa_screen.dart
+// File ini sudah diberi komentar singkat agar mudah dipresentasikan.
+// Komentar tidak mengubah fungsi kode, hanya menjelaskan kegunaannya.
+// =============================================================
+
+// Import package/file yang dibutuhkan oleh halaman ini.
 import 'package:flutter/material.dart';
 
+// Import package/file yang dibutuhkan oleh halaman ini.
 import '../utils/app_colors.dart';
 
+// Class DetailBeasiswaScreen adalah halaman tampilan pada aplikasi.
 class DetailBeasiswaScreen extends StatelessWidget {
+  // Variabel ini menyimpan data yang dipakai oleh widget/function.
   final String title;
+  // Variabel ini menyimpan data yang dipakai oleh widget/function.
   final String desc;
+  // Variabel ini menyimpan data yang dipakai oleh widget/function.
   final String detail;
+  // Variabel ini menyimpan data yang dipakai oleh widget/function.
   final String region;
+  // Variabel ini menyimpan data yang dipakai oleh widget/function.
   final String imageUrl;
 
+  // Variabel ini menyimpan data yang dipakai oleh widget/function.
   const DetailBeasiswaScreen({
     super.key,
     required this.title,
@@ -18,12 +33,16 @@ class DetailBeasiswaScreen extends StatelessWidget {
     required this.imageUrl,
   });
 
+  // Menandakan method ini mengganti method bawaan dari parent class.
   @override
+  // Method build dipakai Flutter untuk menggambar tampilan layar.
   Widget build(BuildContext context) {
 
+    // Kerangka utama halaman Flutter.
     return Scaffold(
       backgroundColor: AppColors.bg,
 
+      // Container untuk membungkus widget dan mengatur ukuran/dekorasi.
       body: Container(
         width: double.infinity,
 
@@ -31,6 +50,7 @@ class DetailBeasiswaScreen extends StatelessWidget {
           minHeight: double.infinity,
         ),
 
+        // Mengatur dekorasi seperti warna, radius, shadow, atau border.
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -46,6 +66,7 @@ class DetailBeasiswaScreen extends StatelessWidget {
           ),
         ),
 
+        // Menjaga UI agar tidak tertutup notch/status bar.
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(
@@ -55,6 +76,7 @@ class DetailBeasiswaScreen extends StatelessWidget {
               40,
             ),
 
+            // Menyusun widget secara vertikal dari atas ke bawah.
             child: Column(
               crossAxisAlignment:
                   CrossAxisAlignment.start,
@@ -62,10 +84,12 @@ class DetailBeasiswaScreen extends StatelessWidget {
               children: [
 
                 /// BACK BUTTON
+                // Widget tombol/klik untuk menjalankan aksi.
                 IconButton(
                   padding: EdgeInsets.zero,
                   alignment: Alignment.centerLeft,
 
+                  // Menampilkan icon pada UI.
                   icon: const Icon(
                     Icons.arrow_back_rounded,
                     size: 32,
@@ -73,17 +97,21 @@ class DetailBeasiswaScreen extends StatelessWidget {
                   ),
 
                   onPressed: () {
+                    // Kembali ke halaman sebelumnya.
                     Navigator.pop(context);
                   },
                 ),
 
+                // Variabel ini menyimpan data yang dipakai oleh widget/function.
                 const SizedBox(height: 16),
 
                 /// IMAGE
+                // Container untuk membungkus widget dan mengatur ukuran/dekorasi.
                 Container(
                   width: double.infinity,
                   height: 315,
 
+                  // Mengatur dekorasi seperti warna, radius, shadow, atau border.
                   decoration: BoxDecoration(
                     borderRadius:
                         BorderRadius.circular(24),
@@ -97,11 +125,13 @@ class DetailBeasiswaScreen extends StatelessWidget {
                     ],
                   ),
 
+                  // Memotong widget dengan sudut membulat.
                   child: ClipRRect(
                     borderRadius:
                         BorderRadius.circular(24),
 
                     child: imageUrl.isNotEmpty
+                        // Menampilkan gambar pada UI.
                         ? Image.network(
                             imageUrl,
                             fit: BoxFit.cover,
@@ -113,9 +143,11 @@ class DetailBeasiswaScreen extends StatelessWidget {
                                   stackTrace,
                                 ) {
 
+                              // Container untuk membungkus widget dan mengatur ukuran/dekorasi.
                               return Container(
                                 color: Colors.white,
 
+                                // Menampilkan icon pada UI.
                                 child: const Icon(
                                   Icons.school_rounded,
                                   size: 70,
@@ -125,10 +157,12 @@ class DetailBeasiswaScreen extends StatelessWidget {
                             },
                           )
 
+                        // Container untuk membungkus widget dan mengatur ukuran/dekorasi.
                         : Container(
                             color:
                                 Colors.white.withAlpha(180),
 
+                            // Menampilkan icon pada UI.
                             child: const Icon(
                               Icons.image_outlined,
                               size: 70,
@@ -138,15 +172,18 @@ class DetailBeasiswaScreen extends StatelessWidget {
                   ),
                 ),
 
+                // Variabel ini menyimpan data yang dipakai oleh widget/function.
                 const SizedBox(height: 22),
 
                 /// REGION
+                // Container untuk membungkus widget dan mengatur ukuran/dekorasi.
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 8,
                   ),
 
+                  // Mengatur dekorasi seperti warna, radius, shadow, atau border.
                   decoration: BoxDecoration(
                     color: const Color.fromRGBO(
                       47,
@@ -159,6 +196,7 @@ class DetailBeasiswaScreen extends StatelessWidget {
                         BorderRadius.circular(30),
                   ),
 
+                  // Menampilkan tulisan di layar.
                   child: Text(
                     region,
 
@@ -170,9 +208,11 @@ class DetailBeasiswaScreen extends StatelessWidget {
                   ),
                 ),
 
+                // Variabel ini menyimpan data yang dipakai oleh widget/function.
                 const SizedBox(height: 18),
 
                 /// TITLE
+                // Menampilkan tulisan di layar.
                 Text(
                   title,
 
@@ -184,14 +224,17 @@ class DetailBeasiswaScreen extends StatelessWidget {
                   ),
                 ),
 
+                // Variabel ini menyimpan data yang dipakai oleh widget/function.
                 const SizedBox(height: 14),
 
                 /// DESC
+                // Container untuk membungkus widget dan mengatur ukuran/dekorasi.
                 Container(
                   width: double.infinity,
 
                   padding: const EdgeInsets.all(18),
 
+                  // Mengatur dekorasi seperti warna, radius, shadow, atau border.
                   decoration: BoxDecoration(
                     color: Colors.white,
 
@@ -207,6 +250,7 @@ class DetailBeasiswaScreen extends StatelessWidget {
                     ],
                   ),
 
+                  // Menampilkan tulisan di layar.
                   child: Text(
                     desc,
 
@@ -218,9 +262,11 @@ class DetailBeasiswaScreen extends StatelessWidget {
                   ),
                 ),
 
+                // Variabel ini menyimpan data yang dipakai oleh widget/function.
                 const SizedBox(height: 24),
 
                 /// TITLE DETAIL
+                // Variabel ini menyimpan data yang dipakai oleh widget/function.
                 const Text(
                   'Penjelasan Lengkap',
 
@@ -231,14 +277,17 @@ class DetailBeasiswaScreen extends StatelessWidget {
                   ),
                 ),
 
+                // Variabel ini menyimpan data yang dipakai oleh widget/function.
                 const SizedBox(height: 12),
 
                 /// DETAIL
+                // Container untuk membungkus widget dan mengatur ukuran/dekorasi.
                 Container(
                   width: double.infinity,
 
                   padding: const EdgeInsets.all(20),
 
+                  // Mengatur dekorasi seperti warna, radius, shadow, atau border.
                   decoration: BoxDecoration(
                     color: Colors.white,
 
@@ -254,6 +303,7 @@ class DetailBeasiswaScreen extends StatelessWidget {
                     ],
                   ),
 
+                  // Menampilkan tulisan di layar.
                   child: Text(
                     detail,
                     textAlign: TextAlign.left,

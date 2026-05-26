@@ -1,3 +1,10 @@
+// =============================================================
+// PENJELASAN FILE: lib/utils/firestore_collections.dart
+// File ini sudah diberi komentar singkat agar mudah dipresentasikan.
+// Komentar tidak mengubah fungsi kode, hanya menjelaskan kegunaannya.
+// =============================================================
+
+// Class FirestoreCollections menyimpan struktur atau logic utama.
 class FirestoreCollections {
   FirestoreCollections._();
 

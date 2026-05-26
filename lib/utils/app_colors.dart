@@ -1,5 +1,13 @@
+// =============================================================
+// PENJELASAN FILE: lib/utils/app_colors.dart
+// File ini sudah diberi komentar singkat agar mudah dipresentasikan.
+// Komentar tidak mengubah fungsi kode, hanya menjelaskan kegunaannya.
+// =============================================================
+
+// Import package/file yang dibutuhkan oleh halaman ini.
 import 'package:flutter/material.dart';
 
+// Class AppColors menyimpan struktur atau logic utama.
 class AppColors {
   static const Color bg = Color(0xFFEFFFF6);
   static const Color bgTop = Color(0xFF88D49C);
