@@ -46,8 +46,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Hapus Data?'),
-          content: const Text('Data beasiswa ini akan dihapus dari Firebase.'),
+          title: const Text('Are you sure want to delete this data?'),
+
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),

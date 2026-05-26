@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../utils/firestore_collections.dart';
-import '../widgets/home_widgets.dart';
 import 'detail_beasiswa_screen.dart';
 import 'admin_main_nav_screen.dart';
 import 'main_nav_screen.dart';
