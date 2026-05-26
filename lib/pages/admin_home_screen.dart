@@ -47,7 +47,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Are you sure want to delete this data?'),
-
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
