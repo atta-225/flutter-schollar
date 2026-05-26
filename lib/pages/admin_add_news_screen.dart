@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../utils/app_colors.dart';
-import '../pages/admin_main_nav_screen.dart';
+import 'admin_main_nav_screen.dart';
 
 class AdminAddNewsScreen extends StatefulWidget {
   const AdminAddNewsScreen({super.key});
@@ -16,8 +16,7 @@ class _AdminAddNewsScreenState extends State<AdminAddNewsScreen> {
   bool isLoading = false;
 
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController shortInfoController = TextEditingController();
-  final TextEditingController detailController = TextEditingController();
+  final TextEditingController informationController = TextEditingController();
   final TextEditingController imageUrlController = TextEditingController();
 
   final List<String> categories = [
@@ -25,29 +24,24 @@ class _AdminAddNewsScreenState extends State<AdminAddNewsScreen> {
     'Kalbar',
     'Kaltim',
     'Kalteng',
-    'Kaltara',
   ];
 
   @override
   void dispose() {
     nameController.dispose();
-    shortInfoController.dispose();
-    detailController.dispose();
+    informationController.dispose();
     imageUrlController.dispose();
     super.dispose();
   }
 
   Future<void> addNews() async {
     final title = nameController.text.trim();
-    final desc = shortInfoController.text.trim();
-    final detail = detailController.text.trim();
+    final info = informationController.text.trim();
     final imageUrl = imageUrlController.text.trim();
 
-    if (selectedCategory == null || title.isEmpty || desc.isEmpty || detail.isEmpty) {
+    if (selectedCategory == null || title.isEmpty || info.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lengkapi kategori, nama, deskripsi, dan detail.'),
-        ),
+        const SnackBar(content: Text('Lengkapi semua data terlebih dahulu')),
       );
       return;
     }
@@ -57,30 +51,36 @@ class _AdminAddNewsScreenState extends State<AdminAddNewsScreen> {
     try {
       await FirebaseFirestore.instance.collection('beasiswa').add({
         'title': title,
-        'desc': desc,
-        'detail': detail,
+        'desc': info,
+        'detail': info,
         'region': selectedCategory,
         'imageUrl': imageUrl,
         'createdAt': FieldValue.serverTimestamp(),
       });
 
       nameController.clear();
-      shortInfoController.clear();
-      detailController.clear();
+      informationController.clear();
       imageUrlController.clear();
-      setState(() => selectedCategory = null);
+
+      setState(() {
+        selectedCategory = null;
+      });
 
       if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Data berhasil ditambahkan')),
       );
     } catch (e) {
       if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Gagal menambahkan data: $e')),
       );
     } finally {
-      if (mounted) setState(() => isLoading = false);
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 
@@ -90,6 +90,7 @@ class _AdminAddNewsScreenState extends State<AdminAddNewsScreen> {
       style: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w900,
+        color: Colors.black,
       ),
     );
   }
@@ -97,39 +98,49 @@ class _AdminAddNewsScreenState extends State<AdminAddNewsScreen> {
   InputDecoration inputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(fontSize: 11, color: Colors.black45),
+      hintStyle: const TextStyle(
+        fontSize: 11,
+        color: Colors.black38,
+      ),
       filled: true,
       fillColor: Colors.white,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 9,
+      ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(2),
         borderSide: const BorderSide(
           color: AppColors.primaryDark,
           width: 1,
         ),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(2),
         borderSide: const BorderSide(
           color: AppColors.primaryDark,
-          width: 1.4,
+          width: 1.3,
         ),
       ),
     );
   }
 
   Widget categoryItem(String category) {
-    final active = selectedCategory == category;
+    final bool active = selectedCategory == category;
 
     return GestureDetector(
-      onTap: () => setState(() => selectedCategory = category),
+      onTap: () {
+        setState(() {
+          selectedCategory = category;
+        });
+      },
       child: SizedBox(
-        width: 86,
+       width: double.infinity,
         child: Row(
           children: [
             Container(
-              width: 21,
-              height: 21,
+              width: 22,
+              height: 22,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -164,20 +175,28 @@ class _AdminAddNewsScreenState extends State<AdminAddNewsScreen> {
     );
   }
 
-  Widget addPhotoBox({required double width, required double height}) {
-    return Container(
-      width: width,
-      height: height,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: AppColors.primaryDark, width: 1),
-      ),
-      child: const Icon(
-        Icons.add_rounded,
-        color: AppColors.yellow,
-        size: 25,
+  Widget addPhotoBox() {
+    return GestureDetector(
+      onTap: () {
+        // nanti bisa diganti fitur upload foto
+      },
+      child: Container(
+        width: 90,
+        height: 112,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(3),
+          border: Border.all(
+            color: AppColors.primaryDark,
+            width: 1,
+          ),
+        ),
+        child: const Icon(
+          Icons.add_rounded,
+          color: AppColors.yellow,
+          size: 24,
+        ),
       ),
     );
   }
@@ -185,46 +204,47 @@ class _AdminAddNewsScreenState extends State<AdminAddNewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF72C386),
-              Color(0xFFA8DDB4),
+              Color(0xFF52B989),
+              Color(0xFFA9DFC8),
               Color(0xFFEFFFF6),
             ],
-            stops: [0.0, 0.45, 1.0],
           ),
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 18, 16, 100),
+            padding: const EdgeInsets.fromLTRB(18, 14, 18, 95),
             child: Column(
               children: [
                 Row(
                   children: [
                     IconButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const AdminMainNavScreen(),
-                          ),
-                        );
-                      },
-
+                     onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AdminMainNavScreen(),
+                        ),
+                        (route) => false,
+                      );
+                    },
                       icon: const Icon(
                         Icons.keyboard_backspace_rounded,
-                        size: 29,
+                        size: 30,
+                        color: Colors.black,
                       ),
                     ),
-
-                    const SizedBox(width: 8),
-
+                    const SizedBox(width: 2),
                     const Text(
-                      'Add Beasiswa',
+                      'Add News',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
@@ -234,112 +254,101 @@ class _AdminAddNewsScreenState extends State<AdminAddNewsScreen> {
                     const Spacer(),
                     IconButton(
                       onPressed: () {},
-                      icon: const Icon(Icons.more_vert_rounded),
+                      icon: const Icon(
+                        Icons.more_vert_rounded,
+                        color: Colors.black,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+
+                const SizedBox(height: 6),
+
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(18, 14, 18, 24),
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 36),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(color: Colors.black, width: 1.05),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(.05),
-                        blurRadius: 12,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(19),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       inputLabel('Category'),
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 10,
-                        runSpacing: 12,
-                        children: categories.map(categoryItem).toList(),
+                      const SizedBox(height: 14),
+
+                     GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: categories.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisExtent: 30,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 12,
+                        ),
+                        itemBuilder: (context, index) {
+                          return categoryItem(categories[index]);
+                        },
                       ),
-                      const SizedBox(height: 25),
+
+                      const SizedBox(height: 26),
+
                       inputLabel('Add Name'),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 10),
+
                       TextField(
                         controller: nameController,
                         decoration: inputDecoration('University Name'),
                       ),
-                      const SizedBox(height: 22),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: addPhotoBox(
-                              width: double.infinity,
-                              height: 104,
-                            ),
-                          ),
 
-                          const SizedBox(width: 14),
-
-                          Expanded(
-                            flex: 1,
-                            child: addPhotoBox(
-                              width: double.infinity,
-                              height: 104,
-                            ),
-                          ),
-                        ],
-                      ),
                       const SizedBox(height: 14),
 
-                      inputLabel('Short Information'),
-                      const SizedBox(height: 12),
+                      inputLabel('Add Photo'),
+                      const SizedBox(height: 10),
 
-                      TextField(
-                        controller: shortInfoController,
-                        maxLines: 3,
-                        decoration: inputDecoration('Deskripsi singkat untuk card user'),
-                      ),
-                      const SizedBox(height: 22),
+                      addPhotoBox(),
+
+                      const SizedBox(height: 24),
 
                       inputLabel('Add Information'),
-
                       const SizedBox(height: 12),
 
                       TextField(
-                        controller: detailController,
+                        controller: informationController,
                         maxLines: 6,
-                        decoration: inputDecoration('Penjelasan lengkap beasiswa'),
+                        decoration: inputDecoration(''),
                       ),
                     ],
                   ),
                 ),
-                
-                const SizedBox(height: 17),
+
+                const SizedBox(height: 46),
+
                 Align(
                   alignment: Alignment.centerRight,
                   child: SizedBox(
-                    width: 96,
-                    height: 34,
+                    width: 82,
+                    height: 30,
                     child: ElevatedButton(
                       onPressed: isLoading ? null : addNews,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryDark,
                         foregroundColor: Colors.white,
-                        padding: EdgeInsets.zero,
                         elevation: 0,
+                        padding: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       child: isLoading
                           ? const SizedBox(
-                              height: 17,
-                              width: 17,
+                              width: 16,
+                              height: 16,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 color: Colors.white,
@@ -348,7 +357,7 @@ class _AdminAddNewsScreenState extends State<AdminAddNewsScreen> {
                           : const Text(
                               'Add',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),

@@ -53,7 +53,7 @@ class AuthCard extends StatelessWidget {
       ),
       padding: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.82),
+        color: Colors.white.withAlpha(209),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: Colors.white,

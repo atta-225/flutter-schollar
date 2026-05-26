@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../utils/app_colors.dart';
+import '../utils/auth_helpers.dart';
 
 class AdminHeader extends StatelessWidget {
   const AdminHeader({super.key});
@@ -23,18 +26,15 @@ class AdminHeader extends StatelessWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
-                    colors: [
-                      Color(0xFFBFFF86),
-                      Color(0xFF8DFFE8),
-                    ],
+                    colors: [Color(0xFFBFFF86), Color(0xFF8DFFE8)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                 ),
                 alignment: Alignment.center,
-                child: const Text(
-                  'N',
-                  style: TextStyle(
+                child: Text(
+                  getDisplayInitial(FirebaseAuth.instance.currentUser),
+                  style: const TextStyle(
                     fontSize: 24,
                     color: Color(0xFF004C6B),
                     fontWeight: FontWeight.w500,
@@ -42,20 +42,20 @@ class AdminHeader extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Hi, Nazriel',
-                      style: TextStyle(
+                      'Hi, ${getDisplayName(FirebaseAuth.instance.currentUser)}',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 17,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    SizedBox(height: 2),
-                    Text(
+                    const SizedBox(height: 2),
+                    const Text(
                       'Sudah memikirkan apa yg ingin kamu\ncapai dimasa depan?',
                       style: TextStyle(
                         color: Colors.white,
@@ -95,10 +95,7 @@ class AdminHeader extends StatelessWidget {
                 SizedBox(width: 10),
                 Text(
                   'search for info',
-                  style: TextStyle(
-                    color: Color(0xFF555555),
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Color(0xFF555555), fontSize: 12),
                 ),
               ],
             ),
@@ -120,10 +117,7 @@ class ScholarshipBanner extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(11),
         gradient: const LinearGradient(
-          colors: [
-            Color(0xFF0BBE85),
-            Color(0xFF9DF0BA),
-          ],
+          colors: [Color(0xFF0BBE85), Color(0xFF9DF0BA)],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
@@ -171,7 +165,7 @@ class ScholarshipBanner extends StatelessWidget {
               width: 135,
               height: 135,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.25),
+                color: Colors.white.withAlpha(64),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -207,14 +201,12 @@ class CategoryButton extends StatelessWidget {
         width: 64,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isActive
-              ? const Color(0xFF2B6F59)
-              : const Color(0xFF4BA77D),
+          color: isActive ? const Color(0xFF2B6F59) : const Color(0xFF4BA77D),
           borderRadius: BorderRadius.circular(7),
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
+                    color: Colors.black.withAlpha(64),
                     blurRadius: 5,
                     offset: const Offset(0, 3),
                   ),
@@ -223,10 +215,7 @@ class CategoryButton extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 12),
         ),
       ),
     );
@@ -256,7 +245,7 @@ class NewsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(11),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.25),
+            color: Colors.black.withAlpha(64),
             blurRadius: 5,
             offset: const Offset(0, 4),
           ),
@@ -270,10 +259,7 @@ class NewsCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
               gradient: const LinearGradient(
-                colors: [
-                  Color(0xFFFFE27A),
-                  Color(0xFF3CC389),
-                ],
+                colors: [Color(0xFFFFE27A), Color(0xFF3CC389)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

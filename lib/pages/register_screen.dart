@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import '../widgets/app_logo.dart';
 import '../widgets/auth_widgets.dart';
 import '../utils/app_colors.dart';
+import '../utils/auth_helpers.dart';
 import 'main_nav_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -22,9 +24,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool loading = false;
 
   Future<void> register() async {
-    if (passC.text.trim() != confirmC.text.trim()) {
+    final email = emailC.text.trim();
+    final password = passC.text.trim();
+    final confirmPassword = confirmC.text.trim();
+
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password tidak sama.')),
+        const SnackBar(
+          content: Text('Semua field wajib diisi.'),
+        ),
+      );
+      return;
+    }
+
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password tidak sama.'),
+        ),
       );
       return;
     }
@@ -32,33 +49,74 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => loading = true);
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailC.text.trim(),
-        password: passC.text.trim(),
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
       );
+
+      final currentUser = credential.user;
+
+      if (currentUser != null) {
+        await createFirestoreUserFromAuth(
+          currentUser,
+          role: 'user',
+        );
+      }
 
       if (!mounted) return;
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const MainNavScreen()),
+        MaterialPageRoute(
+          builder: (_) => const MainNavScreen(),
+        ),
       );
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
 
+      ScaffoldMessenger.of(context).clearSnackBars();
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? 'Daftar gagal')),
+        SnackBar(
+          content: Text(_errorMessage(e)),
+        ),
       );
     } catch (e) {
       if (!mounted) return;
 
+      ScaffoldMessenger.of(context).clearSnackBars();
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(
+          content: Text(
+            'Terjadi kesalahan: ${e.runtimeType}: ${e.toString()}',
+          ),
+        ),
       );
     }
 
     if (mounted) {
       setState(() => loading = false);
+    }
+  }
+
+  String _errorMessage(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'invalid-email':
+        return 'Format email tidak valid.';
+
+      case 'email-already-in-use':
+        return 'Email sudah digunakan.';
+
+      case 'weak-password':
+        return 'Password terlalu lemah.';
+
+      case 'operation-not-allowed':
+        return 'Pendaftaran belum diaktifkan.';
+
+      default:
+        return e.message ?? 'Pendaftaran gagal: ${e.code}';
     }
   }
 
@@ -68,12 +126,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: SingleChildScrollView(
         child: AuthCard(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Column(
               children: [
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-                AppLogo(size: 100),
+                const AppLogo(size: 100),
 
                 Text(
                   'Borneo Scholar',
@@ -84,9 +142,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
 
-                Text(
+                const Text(
                   'Create Account',
                   style: TextStyle(
                     fontSize: 25,
@@ -94,7 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                Text(
+                const Text(
                   'Sign up and start your scholarship journey today',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -102,9 +160,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                SizedBox(height: 22),
+                const SizedBox(height: 22),
 
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Username',
@@ -115,17 +173,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
 
                 TextField(
                   controller: emailC,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: inputStyle('Enter your Username'),
+                  decoration: inputStyle(
+                    'Enter your Username',
+                  ),
                 ),
 
-                SizedBox(height: 14),
+                const SizedBox(height: 14),
 
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Password',
@@ -136,7 +196,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
 
                 TextField(
                   controller: passC,
@@ -157,9 +217,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                SizedBox(height: 14),
+                const SizedBox(height: 14),
 
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Confirm Password',
@@ -170,7 +230,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
 
                 TextField(
                   controller: confirmC,
@@ -191,7 +251,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                SizedBox(height: 28),
+                const SizedBox(height: 28),
 
                 BigButton(
                   text: 'Register',

@@ -41,7 +41,7 @@ class ProfileMenuItem extends StatelessWidget {
               if (hasSwitch)
                 Switch(
                   value: true,
-                  activeColor: Colors.white,
+                  activeThumbColor: Colors.white,
                   activeTrackColor: const Color(0xFF67C54E),
                   onChanged: (_) {},
                 ),

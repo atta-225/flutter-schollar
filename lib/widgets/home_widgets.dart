@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../utils/app_colors.dart';
+import '../utils/auth_helpers.dart';
 
 class HomeHeader extends StatelessWidget {
   final VoidCallback onSearchTap;
 
-  const HomeHeader({
-    super.key,
-    required this.onSearchTap,
-  });
+  const HomeHeader({super.key, required this.onSearchTap});
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +21,12 @@ class HomeHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 28,
-                backgroundColor: Color(0xFFC9FF98),
+                backgroundColor: const Color(0xFFC9FF98),
                 child: Text(
-                  'N',
-                  style: TextStyle(
+                  getDisplayInitial(FirebaseAuth.instance.currentUser),
+                  style: const TextStyle(
                     fontSize: 26,
                     color: Color(0xFF00606E),
                   ),
@@ -36,17 +36,17 @@ class HomeHeader extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      'Hi, Nazriel',
-                      style: TextStyle(
+                      'Hi, ${getDisplayName(FirebaseAuth.instance.currentUser)}',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w800,
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(height: 2),
-                    Text(
+                    const SizedBox(height: 2),
+                    const Text(
                       'Sudah memikirkan apa yg ingin kamu\ncapai dimasa depan?',
                       style: TextStyle(
                         color: Colors.white,
@@ -71,18 +71,11 @@ class HomeHeader extends StatelessWidget {
               ),
               child: const Row(
                 children: [
-                  Icon(
-                    Icons.search,
-                    color: Colors.black,
-                    size: 28,
-                  ),
+                  Icon(Icons.search, color: Colors.black, size: 28),
                   SizedBox(width: 10),
                   Text(
                     'search for info',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.black54),
                   ),
                 ],
               ),
@@ -196,7 +189,7 @@ class NewsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.10),
+            color: Colors.black.withAlpha(26),
             blurRadius: 14,
             offset: const Offset(0, 6),
           ),

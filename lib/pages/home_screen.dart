@@ -6,10 +6,11 @@ import '../widgets/home_widgets.dart';
 import 'detail_beasiswa_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-final VoidCallback? onSearchTap;
+  final VoidCallback? onSearchTap;
+
   const HomeScreen({
     super.key,
-     this.onSearchTap,
+    this.onSearchTap,
   });
 
   @override
@@ -17,48 +18,51 @@ final VoidCallback? onSearchTap;
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String selected = 'All';
+  String selectedCategory = 'All';
 
-  final List<String> regions = [
+  final List<String> categories = [
     'All',
     'Kalsel',
     'Kaltim',
     'Kalteng',
     'Kalbar',
-    'Kaltara',
   ];
 
-  List<Map<String, String>> filterData(List<Map<String, String>> data) {
-    if (selected == 'All') return data;
-    return data.where((e) => e['region'] == selected).toList();
+  void openSearch() {
+    widget.onSearchTap?.call();
   }
 
- void openSearch() {
-  widget.onSearchTap?.call();
-}
+  List<QueryDocumentSnapshot> filterDocs(List<QueryDocumentSnapshot> docs) {
+    if (selectedCategory == 'All') return docs;
 
-  void openDetail(Map<String, String> item) {
+    return docs.where((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      return '${data['region'] ?? ''}' == selectedCategory;
+    }).toList();
+  }
+
+  void openDetail(Map<String, dynamic> data) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => DetailBeasiswaScreen(
-          title: item['title'] ?? '',
-          desc: item['desc'] ?? '',
-          detail: item['detail'] ?? '',
-          region: item['region'] ?? '',
-          imageUrl: item['imageUrl'] ?? '',
+          title: '${data['title'] ?? ''}',
+          desc: '${data['desc'] ?? ''}',
+          detail: '${data['detail'] ?? ''}',
+          region: '${data['region'] ?? ''}',
+          imageUrl: '${data['imageUrl'] ?? ''}',
         ),
       ),
     );
   }
 
-  Future<void> saveBeasiswa(Map<String, String> item) async {
+  Future<void> saveBeasiswa(Map<String, dynamic> data) async {
     await FirebaseFirestore.instance.collection('saved_beasiswa').add({
-      'title': item['title'] ?? '',
-      'desc': item['desc'] ?? '',
-      'detail': item['detail'] ?? '',
-      'region': item['region'] ?? '',
-      'imageUrl': item['imageUrl'] ?? '',
+      'title': '${data['title'] ?? ''}',
+      'desc': '${data['desc'] ?? ''}',
+      'detail': '${data['detail'] ?? ''}',
+      'region': '${data['region'] ?? ''}',
+      'imageUrl': '${data['imageUrl'] ?? ''}',
       'createdAt': FieldValue.serverTimestamp(),
     });
 
@@ -72,9 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget emptyData() {
+  Widget emptyData(String text) {
     return Padding(
-      padding: const EdgeInsets.only(top: 60),
+      padding: const EdgeInsets.only(top: 55),
       child: Center(
         child: Column(
           children: [
@@ -84,16 +88,16 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.green.shade300,
             ),
             const SizedBox(height: 14),
-            const Text(
-              'Belum ada data beasiswa',
-              style: TextStyle(
+            Text(
+              text,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: 6),
             const Text(
-              'Silahkan tambahkan data dari admin',
+              'Beasiswa akan tampil jika admin sudah menambahkan',
               style: TextStyle(
                 fontSize: 13,
                 color: Colors.black54,
@@ -140,15 +144,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 42,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: regions.length,
+                  itemCount: categories.length,
                   itemBuilder: (context, index) {
-                    final r = regions[index];
-                    final active = selected == r;
+                    final category = categories[index];
+                    final active = selectedCategory == category;
 
                     return Padding(
                       padding: const EdgeInsets.only(right: 27),
                       child: GestureDetector(
-                        onTap: () => setState(() => selected = r),
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = category;
+                          });
+                        },
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 22),
                           height: 38,
@@ -169,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 : [],
                           ),
                           child: Text(
-                            r,
+                            category,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -198,6 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('beasiswa')
+                    .orderBy('createdAt', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -210,37 +219,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return emptyData();
+                    return emptyData('Belum ada data beasiswa');
                   }
 
-                  final data = snapshot.data!.docs.map((e) {
-                    final m = e.data() as Map<String, dynamic>;
+                  final docs = filterDocs(snapshot.data!.docs);
 
-                    return {
-                      'id': e.id,
-                      'title': '${m['title'] ?? 'Judul Beasiswa'}',
-                      'desc': '${m['desc'] ?? 'Deskripsi singkat'}',
-                      'detail': '${m['detail'] ?? 'Belum ada detail'}',
-                      'region': '${m['region'] ?? 'All'}',
-                      'imageUrl': '${m['imageUrl'] ?? ''}',
-                    };
-                  }).toList();
-
-                  final filtered = filterData(data);
-
-                  if (filtered.isEmpty) {
-                    return emptyData();
+                  if (docs.isEmpty) {
+                    return emptyData('Belum ada data di kategori ini');
                   }
 
                   return Column(
-                    children: filtered.map((item) {
+                    children: docs.map((doc) {
+                      final data = doc.data() as Map<String, dynamic>;
+
                       return GestureDetector(
-                        onTap: () => openDetail(item),
+                        onTap: () => openDetail(data),
                         child: NewsCard(
-                          title: item['title'] ?? '',
-                          desc: item['desc'] ?? '',
-                          imageUrl: item['imageUrl'] ?? '',
-                          onBookmarkTap: () => saveBeasiswa(item),
+                          title: '${data['title'] ?? ''}',
+                          desc: '${data['desc'] ?? ''}',
+                          imageUrl: '${data['imageUrl'] ?? ''}',
+                          onBookmarkTap: () => saveBeasiswa(data),
                         ),
                       );
                     }).toList(),

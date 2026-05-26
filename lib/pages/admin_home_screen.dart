@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../utils/app_colors.dart';
 import '../widgets/home_widgets.dart';
+import 'edit_beasiswa_screen.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   final VoidCallback? onSearchTap;
@@ -25,7 +26,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     'Kaltim',
     'Kalteng',
     'Kalbar',
-    'Kaltara',
   ];
 
   void openSearch() {
@@ -197,7 +197,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               const SizedBox(height: 20),
 
               const Text(
-                'Data Beasiswa',
+                'New',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
@@ -235,7 +235,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     children: docs.map((doc) {
                       final data = doc.data() as Map<String, dynamic>;
 
-                      return Stack(
+                      return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Stack(
                         children: [
                           NewsCard(
                             title: '${data['title'] ?? ''}',
@@ -245,24 +247,49 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                           ),
 
                           Positioned(
-                            right: 8,
-                            top: 8,
-                            child: Material(
-                              color: Colors.white,
-                              shape: const CircleBorder(),
-                              elevation: 3,
-                              child: IconButton(
-                                onPressed: () => deleteData(doc.id),
-                                icon: const Icon(
-                                  Icons.delete_rounded,
-                                  color: Colors.red,
-                                  size: 22,
+                          right: 14,
+                          top: 14,
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => EditBeasiswaScreen(
+                                          docId: doc.id,
+                                          oldTitle: '${data['title'] ?? ''}',
+                                          oldDesc: '${data['desc'] ?? ''}',
+                                          oldDetail: '${data['detail'] ?? ''}',
+                                          oldRegion: '${data['region'] ?? ''}',
+                                          oldImageUrl: '${data['imageUrl'] ?? ''}',
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Icon(
+                                    Icons.edit_outlined,
+                                    color: Color(0xFFFFD600),
+                                    size: 30,
+                                  ),
                                 ),
-                              ),
+
+                                const SizedBox(width: 14),
+
+                                GestureDetector(
+                                  onTap: () => deleteData(doc.id),
+                                  child: const Icon(
+                                    Icons.delete_outline,
+                                    color: Colors.red,
+                                    size: 32,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
-                      );
+                      ),
+                    );
                     }).toList(),
                   );
                 },

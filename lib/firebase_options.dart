@@ -41,48 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAAkrfMDicLF5DuZbQ_Mi1qkQDjJv1EkTE',
-    appId: '1:763781856186:web:bb8bfbe08e2e37f47dfb83',
-    messagingSenderId: '763781856186',
-    projectId: 'crud-flutter-f8c3b',
-    authDomain: 'crud-flutter-f8c3b.firebaseapp.com',
-    storageBucket: 'crud-flutter-f8c3b.firebasestorage.app',
-    measurementId: 'G-YMWM8L93WZ',
+    apiKey: 'AIzaSyBQrlFRr8QYruulxZfdrWVdchsbMHQ1rLM',
+    appId: '1:350426373336:web:92a344629752813c254bad',
+    messagingSenderId: '350426373336',
+    projectId: 'borneo-scholar',
+    authDomain: 'borneo-scholar.firebaseapp.com',
+    storageBucket: 'borneo-scholar.firebasestorage.app',
+    measurementId: 'G-1P045LGZ9W',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAafxQkyjBU57yjAxvvuDC7YWBtkvTaEn4',
-    appId: '1:763781856186:android:de4cd06f4186e9697dfb83',
-    messagingSenderId: '763781856186',
-    projectId: 'crud-flutter-f8c3b',
-    storageBucket: 'crud-flutter-f8c3b.firebasestorage.app',
+    apiKey: 'AIzaSyDYdnppwh44KuP8yk1MrS_JWTQWPFTPyVw',
+    appId: '1:350426373336:android:5a3381d9a25252a6254bad',
+    messagingSenderId: '350426373336',
+    projectId: 'borneo-scholar',
+    storageBucket: 'borneo-scholar.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB4Ddj_5Y2z_uGykzqDlWi0-9BmBealI1Y',
-    appId: '1:763781856186:ios:e56e62ba7b05bfae7dfb83',
-    messagingSenderId: '763781856186',
-    projectId: 'crud-flutter-f8c3b',
-    storageBucket: 'crud-flutter-f8c3b.firebasestorage.app',
-    iosBundleId: 'com.example.odoy',
+    apiKey: 'AIzaSyCVh3ZZu98k5gKvnVWyF47gseu1WpULLPA',
+    appId: '1:350426373336:ios:686aec7d2ec267b7254bad',
+    messagingSenderId: '350426373336',
+    projectId: 'borneo-scholar',
+    storageBucket: 'borneo-scholar.firebasestorage.app',
+    iosBundleId: 'com.example.borneoScholar',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyB4Ddj_5Y2z_uGykzqDlWi0-9BmBealI1Y',
-    appId: '1:763781856186:ios:e56e62ba7b05bfae7dfb83',
-    messagingSenderId: '763781856186',
-    projectId: 'crud-flutter-f8c3b',
-    storageBucket: 'crud-flutter-f8c3b.firebasestorage.app',
-    iosBundleId: 'com.example.odoy',
+    apiKey: 'AIzaSyCVh3ZZu98k5gKvnVWyF47gseu1WpULLPA',
+    appId: '1:350426373336:ios:686aec7d2ec267b7254bad',
+    messagingSenderId: '350426373336',
+    projectId: 'borneo-scholar',
+    storageBucket: 'borneo-scholar.firebasestorage.app',
+    iosBundleId: 'com.example.borneoScholar',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAAkrfMDicLF5DuZbQ_Mi1qkQDjJv1EkTE',
-    appId: '1:763781856186:web:49f4ac3023f53cc27dfb83',
-    messagingSenderId: '763781856186',
-    projectId: 'crud-flutter-f8c3b',
-    authDomain: 'crud-flutter-f8c3b.firebaseapp.com',
-    storageBucket: 'crud-flutter-f8c3b.firebasestorage.app',
-    measurementId: 'G-HRQFKN0QFM',
+    apiKey: 'AIzaSyBQrlFRr8QYruulxZfdrWVdchsbMHQ1rLM',
+    appId: '1:350426373336:web:9b973abe54cb7086254bad',
+    messagingSenderId: '350426373336',
+    projectId: 'borneo-scholar',
+    authDomain: 'borneo-scholar.firebaseapp.com',
+    storageBucket: 'borneo-scholar.firebasestorage.app',
+    measurementId: 'G-C69R9GW54G',
   );
+
 }
